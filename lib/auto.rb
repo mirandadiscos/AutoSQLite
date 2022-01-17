@@ -54,38 +54,3 @@ class Auto
   end
 end
   
-
-
-if defined?(IRB)
-  def self.client
-    @client ||= TCPSocket.open("0.0.0.0", 2000)
-  end
-  client
-else
-  acceptor = TCPServer.open("0.0.0.0", 2000)
-  fds = [acceptor]
-  while true
-    puts 'loop'
-    if ios = select(fds, [], [], 10)
-      reads = ios.first
-      p reads
-      reads.each do |client|
-        if client == acceptor
-          puts 'Someone connected to server. Adding socket to fds.'
-          client, sockaddr = acceptor.accept
-          fds << client
-        elsif client.eof?
-          puts "Client disconnected"
-          fds.delete(client)
-          client.close
-        else
-          # Perform a blocking-read until new-line is encountered.
-          # We know the # client is writing, so as long as it adheres to the
-          # new-line protocol, we shouldn't block for long
-          puts "Reading..."
-          p client.gets("\n")
-        end
-      end
-    end
-  end
-end
