@@ -4,6 +4,7 @@ include Socket::Constants
 
 
 class Auto
+  
   def initialize
     # conecta no banco e carrega as principais variaveis
     @ip = '127.0.0.1'
@@ -17,7 +18,9 @@ class Auto
     @socket.bind( @sockaddr )
     @socket.listen( 7 )
     @client_fd, @client_addrinfo = @socket.sysaccept
-    return  @client_socket = Socket.for_fd( @client_fd )
+    @server = 1
+    @client_socket = Socket.for_fd( @client_fd )
+    return 'Connected'
   end
 
   def send_msg(msg)
@@ -29,12 +32,16 @@ class Auto
   end
 
   def close_connections
-    if @socket == nil
-      @client_socket.close
-    else
+    if @server == 1
       @socket.close
+    else
+      @client_socket.close
     end
     return 'Connection ends'
+  end
+
+  def close!
+    close_connections
   end
   # Fim das funções para o Auto funcionar como servidor
   
@@ -44,6 +51,7 @@ class Auto
       @client_socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
       @sockaddr = Socket.pack_sockaddr_in( @port, @ip )
       @client_socket.connect( @sockaddr )
+      @server = 0
     rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
         puts 'Connecting error'
     end
