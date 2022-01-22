@@ -1,10 +1,6 @@
 require 'sqlite3'
 require 'socket'
-
-#a = Auto.new
-#msg = a.wait_conex
-#puts msg
-
+include Socket::Constants
 
 class Auto
   attr_accessor :port
@@ -16,15 +12,15 @@ class Auto
     @port = 2000
   end
  
-  def wait_conex
-      Socket.tcp_server_loop(2000) {|sock, client_addrinfo|
-        begin
-          IO.copy_stream(sock, sock)  
-        ensure
-          sock.close
-        end
-      }
+  def waiting_connection
+    socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
+    sockaddr = Socket.pack_sockaddr_in( @port, '127.0.0.1' )
+    socket.bind( sockaddr )
+    socket.listen( 5 )
+    client_fd, client_addrinfo = socket.sysaccept
+    return client_socket = Socket.for_fd( client_fd )
   end
+end
   
 #    while (session = server.accept)
 #      command = server.gets

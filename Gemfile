@@ -11,3 +11,7 @@ gem "sqlite3", "~> 1.4"
 gem "byebug", "~> 11.1"
 
 gem "pry-byebug", "~> 3.9"
+
+gem "debug", "~> 1.4"
+
+gem "rspec", "~> 3.10"

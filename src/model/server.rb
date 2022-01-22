@@ -1,5 +1,5 @@
+require 'pry'
 require 'socket'
-require 'byebug'
 include Socket::Constants
 
 #---- Setando protocolo e o tipo de comunicação: ----#
@@ -10,6 +10,7 @@ socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
 
 #---- Server: Embala IP E Porta como uma string de endereço socket
 sockaddr = Socket.pack_sockaddr_in( 2200, '127.0.0.1' )
+binding.pry
 #---- Vincula-se ao endereço fornecido
 socket.bind( sockaddr )
 #---- Ouve as conexões, usando um inteiro como backlog @backlog tamanho maximo da fila para conexões pendentes
