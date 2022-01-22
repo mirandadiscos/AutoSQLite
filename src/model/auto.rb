@@ -48,7 +48,6 @@ class Auto
         puts 'Connecting error'
     end
   end
-end
 
   def gravalog
     
