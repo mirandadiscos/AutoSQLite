@@ -17,8 +17,7 @@ class Auto
     @socket.bind( @sockaddr )
     @socket.listen( 7 )
     @client_fd, @client_addrinfo = @socket.sysaccept
-   return  @client_socket = Socket.for_fd( @client_fd )
-     puts 'Connected'
+    return  @client_socket = Socket.for_fd( @client_fd )
   end
 
   def send_msg(msg)
