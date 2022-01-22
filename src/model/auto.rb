@@ -2,35 +2,58 @@ require 'sqlite3'
 require 'socket'
 include Socket::Constants
 
-class Auto
-  attr_accessor :port
- 
-  def initialize
 
+class Auto
+  def initialize
     # conecta no banco e carrega as principais variaveis
-    # @ip
+    @ip = '127.0.0.1'
     @port = 2000
   end
- 
+  
+  # As funções a seguir referece a conexões em que o Auto precisa ser Server
   def waiting_connection
-    socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
-    sockaddr = Socket.pack_sockaddr_in( @port, '127.0.0.1' )
-    socket.bind( sockaddr )
-    socket.listen( 5 )
-    client_fd, client_addrinfo = socket.sysaccept
-    return client_socket = Socket.for_fd( client_fd )
+    @socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
+    @sockaddr = Socket.pack_sockaddr_in( @port, @ip )
+    @socket.bind( @sockaddr )
+    @socket.listen( 7 )
+    @client_fd, @client_addrinfo = @socket.sysaccept
+   return  @client_socket = Socket.for_fd( @client_fd )
+     puts 'Connected'
+  end
+
+  def send_msg(msg)
+    @client_socket.puts msg
+  end
+  
+  def received_msg
+    return  @client_socket.readline.chomp
+  end
+
+  def close_connections
+    if @socket == nil
+      @client_socket.close
+    else
+      @socket.close
+    end
+    return 'Connection ends'
+  end
+  # Fim das funções para o Auto funcionar como servidor
+  
+  # As funções a Seguir funcionará como client
+  def client_connect
+    begin
+      @client_socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
+      @sockaddr = Socket.pack_sockaddr_in( @port, @ip )
+      @client_socket.connect( @sockaddr )
+    rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
+        puts 'Connecting error'
+    end
   end
 end
-  
-#    while (session = server.accept)
-#      command = server.gets
-#      if command.nil?
-#        next
-#      else
-#        puts command
-#      end
-#    end
-#  end
+
+  def gravalog
+    
+  end
 
   def record_results
     # a gravação precisa ter um status
@@ -39,14 +62,9 @@ end
     # alterado está entre init_anorm e init_norm ou entre end_norm e end_anorm
     # fora desses ranges é considerado absurdo
     # o resultado tem um codigo de barras, um código de identificação, um valor(numerico ou string),Unidade de medida e possiveis Flags
-    # se valor for string gravamos sempre normal, se não tiver ranges, também gravar como normal
+    # se valor r string gravamos sempre normal, se não tiver ranges, também gravar como normal
     # as Flags são pertinentes a amostra como um todo
     # um código de barras tem varios códigos e varios exames, com diferentes unidades de medidas
-  end
-
-  def send_message(msg)
-    # envia dados para cliente
-
   end
 end
   
