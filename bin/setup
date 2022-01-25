@@ -1,7 +1,43 @@
-#!/usr/bin/env sh
-set -e
+#!/usr/bin/env ruby
 
-bundle install
+puts '== Instalando dependências =='
+system 'gem install bundler --conservative'
+system('bundle check') || system('bundle install')
 
-echo
-echo '== Tudo configurado, pode iniciar ;) =='
+require 'sqlite3'
+
+puts "\n== Preparando banco de dados =="
+begin
+  db = SQLite3::Database.open "db/auto.db"
+  db.execute <<~SQL
+    CREATE TABLE Equipaments(
+      title text,,
+      brand varchar(20),
+      commtype integer,
+      ip varchar(20),
+      port varchar(8),
+      comm integer,
+
+    );
+    SQL
+   db.execute <<~SQL CREATE TABLE valref(
+        init_norm float,
+        final_norm float,
+        init_anorm float,
+        final_anorm float,
+        sex char(1)
+    );
+    SQL
+
+  seed_data = [["Enviar documentos", "Trabalho"],
+               ["Comprar papel higiênico", "Casa"]]
+
+  seed_data.each do |data|
+    db.execute "INSERT INTO Tasks VALUES ( ?, ? )", data
+  end
+
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
