@@ -57,6 +57,7 @@ class Auto
     end
   end
 
+
   def gravalog
     
   end
@@ -73,9 +74,10 @@ class Auto
     id = 1
     db = SQLite3::Database.open "db/auto.db"
     db.results_as_hash = true
-    valref = db.execute "SELECT init_anorm, init_norm,final_norm,final_anorm, sex FROM valref where id = '#{id}'"
+    valref = db.execute "SELECT idade_inicio,idade_fim,init_anorm, init_norm,final_norm,final_anorm, sex FROM valref where id = '#{id}'"
     valref = valref[0].to_h
     db.close
+
 
    # entre init_norm e final_norm = normal
    # entre init_anorm e init_norm = alterado
@@ -88,4 +90,4 @@ class Auto
     # alterado está entre init_anorm e init_norm ou entre end_norm e end_anorm
     # fora desses ranges é considerado absurdo
 end
-  
+end

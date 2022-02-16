@@ -10,34 +10,72 @@ puts "\n== Preparando banco de dados =="
 begin
   db = SQLite3::Database.open "db/auto.db"
   db.execute <<~SQL
-    CREATE TABLE Equipaments(
-      title text,,
+    CREATE TABLE equipament(
+      eqpid INTEGER PRIMARY KEY AUTOINCREMENT,
+      title text,
       brand varchar(20),
-      commtype integer,
       ip varchar(20),
       port varchar(8),
-      comm integer,
-
+      comm integer
     );
     SQL
-   db.execute <<~SQL CREATE TABLE valref(
-        init_norm float,
-        final_norm float,
-        init_anorm float,
-        final_anorm float,
+    #insert into equipament values(null,"XN550","Sysmex","127.0.0.1",5505,0);
+
+  db.execute <<~SQL
+    CREATE TABLE exam(
+      exaid INTEGER PRIMARY KEY AUTOINCREMENT,
+      title UNIQUE text,
+      origin_code varchar(10)
+    );
+    SQL
+    #insert into exam values(null,"HEMATOCRITO","HCT");
+  db.execute <<~SQL
+    CREATE TABLE acncode(
+      acnid INTEGER PRIMARY KEY AUTOINCREMENT,
+      acn text,
+      eqpacn INTEGER,
+      exmacn INTEGER,
+      FOREIGN KEY(eqpacn) REFERENCES equipament(eqpid),
+      FOREIGN KEY(exmacn) REFERENCES exam(exaid)
+    );
+    SQL
+    #insert into acncode values(null,"HCT",1,1);
+  db.execute <<~SQL CREATE TABLE refvalue(
+        refid INTEGER PRIMARY KEY AUTOINCREMENT,
+        FOREIGN KEY(eqpexa) REFERENCES equipament(eqpid)
+        id_exa
+        idade_inicio integer,
+        idade_fim integer,
+        init_norm real,
+        final_norm real,
+        init_anorm real,
+        final_anorm real,
         sex char(1)
-    );
-    SQL
-
-  seed_data = [["Enviar documentos", "Trabalho"],
-               ["Comprar papel higiênico", "Casa"]]
-
-  seed_data.each do |data|
-    db.execute "INSERT INTO Tasks VALUES ( ?, ? )", data
-  end
+       );
+       SQL
 
 rescue SQLite3::Exception => e
   puts e
 ensure
   db.close if db
 end
+
+'''
+select equipament.title as equipament,
+      exam.title as exame,
+      exam.origin_code as LIS,
+      acn as ACN
+      from acncode
+      inner join exam on exam.exaid = acncode.exmacn
+      inner join equipament on equipament.eqpid = acncode.eqpacn
+      where equipament.eqpid = 1;
+
+
+         insert into valref values(null,1,120,10.0,15.0,5.0,20.0,"M");
+    seed_data = [["Enviar documentos", "Trabalho"],
+               ["Comprar papel higiênico", "Casa"]]
+
+  seed_data.each do |data|
+    db.execute "INSERT INTO Tasks VALUES ( ?, ? )", data
+  end
+'''
