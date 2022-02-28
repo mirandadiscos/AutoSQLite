@@ -6,7 +6,7 @@
 <a href="#objetivo">Application</a> •
 <a href="#tecnologias">Technologies</a> •
 <a href="#licenc-a">Licensed</a> •
-<a href="#autor">Athur</a>
+<a href="#autor">Authorr</a>
 </p>
 
 <h4 align="center">
