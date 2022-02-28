@@ -1,5 +1,14 @@
-# AutoSQLite
+<h1 align="center">AutoSQLite</h1>
 
-A Communicator bidirectional TCP/IP
+<p>This is a communicatior client-server capable to connect a hotspot,sending and receving data loop</p>
 
-Dialogue between TCP/IP machine and implemented demand a
+<p align="center">
+<a href="#objetivo">Application</a> •
+<a href="#tecnologias">Technologies</a> •
+<a href="#licenc-a">Licensed</a> •
+<a href="#autor">Athur</a>
+</p>
+
+<h4 align="center">
+    🚧 AutoSQLite 🚀 Under Construction.. 🚧
+</h4>
